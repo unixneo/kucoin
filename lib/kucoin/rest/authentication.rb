@@ -10,6 +10,7 @@ module Kucoin
           'KC-API-SIGN'       =>  data[:signature],
           'KC-API-TIMESTAMP'  =>  data[:timestamp],
           'KC-API-PASSPHRASE' =>  self.configuration.passphrase
+          'KC-API-KEY-VERSION'  => 'V2'
         }
       end
       
