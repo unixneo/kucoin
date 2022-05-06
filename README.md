@@ -15,26 +15,29 @@ After setting up your account, head to "Account", locate the "API Management" se
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'kucoin'
+gem "kucoin", git: "https://github.com/unixneo/kucoin"
 ```
 
 And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install kucoin
 
 ## Setup
 
 Create e.g. an initializer and configure the client globally:
 
+```bash
+export KUCOIN_API_KEY="blah_blah_blah"
+export KUCOIN_API_SECRET="blah_blah_blah"
+export KUCOIN_API_PASSPHRASE="blah_blah_blah"
+```
+
 ```ruby
 Kucoin.configure do |config|
-  config.key          =   YOUR_API_KEY
-  config.secret       =   YOUR_API_SECRET
-  config.passphrase   =   PASSPHRASE_YOU_USED_TO_CREATE_THE_API_KEY
+  config.key          =   ENV['KUCOIN_API_KEY']
+  config.secret       =   ENV['KUCOIN_API_SECRET']
+  config.passphrase   =   ENV['KUCOIN_API_PASSPHRASE']
 end
 ```
 
