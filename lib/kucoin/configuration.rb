@@ -4,7 +4,7 @@ module Kucoin
     
     def initialize
       self.api_url          =   "https://api.kucoin.com"
-      self.api_version      =   2
+      self.api_version      =  1
       
       self.key              =   nil
       self.secret           =   nil
