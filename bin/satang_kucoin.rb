@@ -52,7 +52,7 @@ def satang(delay=5,thb=20000,fx=34.19,coin='TRX',scan=false,show_btc_thb=false)
         btc_thb = ((result['BTC_THB']["bid"]['price'].to_f.round(5) + result['BTC_THB']["ask"]['price'].to_f.round(5))/2).round(3)
         
         # The network fee for TRX is 1 TRX
-        # Needs lookup table for other coins
+        # Needs lookup table for other coins so this formula overestimates the BTC other than TRX right now
         if coin.include? 'TRX'
             total_coin = (((thai_baht - satang_fee)/ coin_thb) - 1.00000).round(10)
         else
@@ -136,9 +136,16 @@ def scan_satang(delay=5,thb=20000,fx=34.19,coin='TRX',scan=true,show_btc_thb=fal
             scan_output << satang(delay,thb,fx,a_coin,true,false)
         end
        
-        
-        scan_output.sort.reverse.each do |line|
-            puts "BTC-USD #{"%.2f" % line[2].round(2)} TOTAL BTC #{"%.6f" % line[0]}  (#{line[1]})"
+        lines =  scan_output.sort.reverse.each
+        coins_count = lines.count
+        count = 0
+        base_btc = 0.0
+        lines.each do |line|
+            base_btc = line[0] if count == 0
+            percent_increase = (line[0]/base_btc).round(6)
+            base_increase = (1.000 - percent_increase).round(6)
+            puts "BTC-USD #{"%.2f" % line[2].round(2)} TOTAL BTC #{"%.6f" % line[0]}  #{"%.2f" % (base_increase * 100.00).round(2)}% (#{line[1]})"
+            count =+ 1
         end
         sleep delay
     end 
