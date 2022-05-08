@@ -85,7 +85,7 @@ def satang(delay=5,thb=20000,fx=34.19,coin='TRX',scan=false,show_btc_thb=false)
         
         
         if scan
-            scan_output.push(btc,coin.strip)
+            scan_output.push(btc,coin.strip,btc_usd.round(2))
             break
         else
             output << "-------------------------------"
@@ -115,10 +115,16 @@ def satang(delay=5,thb=20000,fx=34.19,coin='TRX',scan=false,show_btc_thb=false)
 end
 
 def scan_satang(delay=5,thb=20000,fx=34.19,coin='TRX',scan=true,show_btc_thb=false)
-    coins = ['TRX','XRP','XLM','BNB','DOGE','LTC','LUNA']
+    
     
     
     while true
+        
+        if !ENV['SATANG_API_COINS'].nil? && ENV['SATANG_API_COINS'].split(',').count > 0
+            coins = ENV['SATANG_API_COINS'].split(',')
+        else
+            coins = ['TRX','XRP','XLM','BNB','DOGE','LTC','LUNA']
+        end
         output = []
         scan_output = []
         output << "-------------------------------"
@@ -132,7 +138,7 @@ def scan_satang(delay=5,thb=20000,fx=34.19,coin='TRX',scan=true,show_btc_thb=fal
        
         
         scan_output.sort.reverse.each do |line|
-            puts "TOTAL BTC #{"%.6f" % line[0]} (#{line[1]})"
+            puts "BTC-USD #{"%.2f" % line[2].round(2)} TOTAL BTC #{"%.6f" % line[0]}  (#{line[1]})"
         end
         sleep delay
     end 
