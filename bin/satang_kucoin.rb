@@ -6,6 +6,9 @@
 # This software done not account for volume and is only an approximation.
 # Do not make trading decisions based solely on this software.
 
+# Note:  Satang Pro has very low trading volume and so liquidity is low
+# Use this tool with caution.
+
 def satang(delay=5,thb=20000,fx=34.19,coin='TRX',scan=false,show_btc_thb=false)
     version="0.0.1.4"
     
@@ -116,7 +119,7 @@ def satang(delay=5,thb=20000,fx=34.19,coin='TRX',scan=false,show_btc_thb=false)
 end
 
 def scan_satang(delay=5,thb=20000,fx=34.19,coin='TRX',scan=true,show_btc_thb=false)
-    coins = ['TRX','XRP','XLM','DOGE','LTC','LUNA']
+    coins = ['TRX','XRP','XLM','BNB','DOGE','LTC','LUNA']
     
     
     while true
@@ -132,4 +135,6 @@ def scan_satang(delay=5,thb=20000,fx=34.19,coin='TRX',scan=true,show_btc_thb=fal
         sleep delay
     end   
 end
-satang(5,20000,34.19,'TRX')
+
+#satang(5,20000,34.19,'TRX')
+scan_satang
