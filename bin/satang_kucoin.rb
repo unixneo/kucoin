@@ -127,10 +127,9 @@ def scan_satang(delay=5,thb=20000,fx=34.19,coin='TRX',scan=true,show_btc_thb=fal
         end
         output = []
         scan_output = []
-        output << "-------------------------------"
-        output << "SCANNER"
-        output <<  "TIME #{Time.now}"
-        output << "-------------------------------"
+        output << "--------------------------------------------------"
+        output << "SCANNING SATANG-KUCOIN @ #{Time.now}"
+        output << "--------------------------------------------------"
         puts output
         coins.each do |a_coin|
             scan_output << satang(delay,thb,fx,a_coin,true,false)
