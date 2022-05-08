@@ -1,9 +1,13 @@
-# Example file to check the price of one coin on Satang
-# and compare outcomes after transfering to Kucoin
+# Example file to check the price of one coin on Satang Pro
+# and compare outcomes after transfering coin to Kucoin
 # and converting to BTC using trading pairs
+# This software is not financial advice and is not a trading bot.
+# This simple a situtional awareness tool for looking at coins.
+# This software done not account for volume and is only an approximation.
+# Do not make trading decisions based solely on this software.
 
-def satang(delay=5,thb=20000,fx=34.19,coin='TRX',show_btc_thb=false)
-    version="0.0.1.31"
+def satang(delay=5,thb=20000,fx=34.19,coin='TRX',scan=false,show_btc_thb=false)
+    version="0.0.1.4"
     
     # Set up Satang Exchange API Parameters
     require 'net/http'
@@ -12,6 +16,8 @@ def satang(delay=5,thb=20000,fx=34.19,coin='TRX',show_btc_thb=false)
     thai_baht = thb
     # satang pro fee is current 0.2 percent per trade
     satang_fee = thai_baht *  0.002000
+
+   
     satang_pair="#{coin}_THB"
     kucoin_withdraw_btc_fee = 0.0005
    
@@ -73,29 +79,57 @@ def satang(delay=5,thb=20000,fx=34.19,coin='TRX',show_btc_thb=false)
             final_thb_from_btc = ((btc_to_satang.round(10) *  btc_thb.round(10)) * (1.0000 -0.0025)).round(10)
         end
 
-        output << "-------------------------------"
-        output <<  "TIME #{Time.now}"
-        output <<  "USD #{"%.2f" % (thai_baht / tt_rate).round(2)}"
-        output <<  "#{coin}-THB #{coin_thb}"
-        output <<  "TOTAL #{coin} #{total_coin.round(3)}"
-        output <<  "#{coin}-BTC #{"%.9f" %  coin_btc.to_f.round(9)}"
-        output <<  "BTC-USD #{"%.2f" % btc_usd.round(2)}"
-        if show_btc_thb
-            output <<  "KUCOIN BTC WITHDRAWAL FEE #{"%.2f" % (btc_usd.round(2) * kucoin_withdraw_btc_fee.round(10)).round(2)}"
+        
+        
+        if !scan
+            output << "-------------------------------"
+            output <<  "TIME #{Time.now}"
+            output <<  "USD #{"%.2f" % (thai_baht / tt_rate).round(2)}" 
+            output <<  "#{coin}-THB #{coin_thb}" 
+            output <<  "TOTAL #{coin} #{total_coin.round(3)}" 
+            output <<  "#{coin}-BTC #{"%.9f" %  coin_btc.to_f.round(9)}"
+            output <<  "BTC-USD #{"%.2f" % btc_usd.round(2)}"
+            if show_btc_thb
+                output <<  "KUCOIN BTC WITHDRAWAL FEE #{"%.2f" % (btc_usd.round(2) * kucoin_withdraw_btc_fee.round(10)).round(2)}"
+            end
         end
-        output <<  "TOTAL BTC #{btc.round(10)}"
+        if scan
+            output <<  "TOTAL BTC #{"%.5f" % btc.round(5)} (#{coin})"
+        else
+            output <<  "TOTAL BTC #{btc.round(10)} (#{coin})"
+        end
+        if !scan
         output <<  "BTC-THB #{btc_thb}"
-        output <<  "TOTAL USD #{"%.2f" %  total_usd }"
-        output <<  "TOTAL THB #{"%.2f" % (total_usd  * tt_rate).round(2)}"
-        if show_btc_thb
-            output <<  "TOTAL BTC TO SATANG #{"%.9f" % btc_to_satang.round(10)}"
-            output <<  "TOTAL BTC_THB #{"%.9f" % final_thb_from_btc.round(10)}"
+            output <<  "TOTAL USD #{"%.2f" %  total_usd }"
+            output <<  "TOTAL THB #{"%.2f" % (total_usd  * tt_rate).round(2)}"
+            if show_btc_thb
+                output <<  "TOTAL BTC TO SATANG #{"%.9f" % btc_to_satang.round(10)}"
+                output <<  "TOTAL BTC_THB #{"%.9f" % final_thb_from_btc.round(10)}"
+            end
         end
  
         puts output
+        break if scan
         sleep delay
     end
 
 end
 
+def scan_satang(delay=5,thb=20000,fx=34.19,coin='TRX',scan=true,show_btc_thb=false)
+    coins = ['TRX','XRP','XLM','DOGE','LTC','LUNA']
+    
+    
+    while true
+        output =[]
+        output << "-------------------------------"
+        output << "SCANNER"
+        output <<  "TIME #{Time.now}"
+        output << "-------------------------------"
+        puts output
+        coins.each do |a_coin|
+            satang(delay,thb,fx,a_coin,true,false)
+        end
+        sleep delay
+    end   
+end
 satang(5,20000,34.19,'TRX')
