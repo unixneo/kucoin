@@ -10,7 +10,7 @@
 # Use this tool with caution.
 
 def satang(delay=5,thb=20000,fx=34.19,coin='TRX',scan=false,show_btc_thb=false)
-    version="0.0.1.4"
+    version="0.0.1.41"
     
     # Set up Satang Exchange API Parameters
     require 'net/http'
@@ -36,7 +36,7 @@ def satang(delay=5,thb=20000,fx=34.19,coin='TRX',scan=false,show_btc_thb=false)
     coin_tether="#{coin}-USDT"
 
     kc_client = Kucoin::Rest::Client.new
-
+    scan_output = [] if scan
     while true do
         output = []
         # Do Satang Exchange API and Simple Math
@@ -97,7 +97,8 @@ def satang(delay=5,thb=20000,fx=34.19,coin='TRX',scan=false,show_btc_thb=false)
             end
         end
         if scan
-            output <<  "TOTAL BTC #{"%.5f" % btc.round(5)} (#{coin})"
+            #output <<  {"TOTAL BTC #{"%.5f" % btc.round(5)} (#{coin})"
+            scan_output.push(btc,coin.strip)
         else
             output <<  "TOTAL BTC #{btc.round(10)} (#{coin})"
         end
@@ -110,12 +111,14 @@ def satang(delay=5,thb=20000,fx=34.19,coin='TRX',scan=false,show_btc_thb=false)
                 output <<  "TOTAL BTC_THB #{"%.9f" % final_thb_from_btc.round(10)}"
             end
         end
- 
-        puts output
+
+        
+        puts output if !scan
         break if scan
         sleep delay
     end
-
+    return scan_output if scan
+    
 end
 
 def scan_satang(delay=5,thb=20000,fx=34.19,coin='TRX',scan=true,show_btc_thb=false)
@@ -123,17 +126,24 @@ def scan_satang(delay=5,thb=20000,fx=34.19,coin='TRX',scan=true,show_btc_thb=fal
     
     
     while true
-        output =[]
+        output = []
+        scan_output = []
         output << "-------------------------------"
         output << "SCANNER"
         output <<  "TIME #{Time.now}"
         output << "-------------------------------"
         puts output
         coins.each do |a_coin|
-            satang(delay,thb,fx,a_coin,true,false)
+            scan_output << satang(delay,thb,fx,a_coin,true,false)
+        end
+       
+        
+        scan_output.sort.reverse.each do |line|
+            puts "TOTAL BTC #{"%.6f" % line[0]} (#{line[1]})"
         end
         sleep delay
-    end   
+    end 
+    
 end
 
 #satang(5,20000,34.19,'TRX')
