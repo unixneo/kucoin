@@ -84,7 +84,10 @@ def satang(delay=5,thb=20000,fx=34.19,coin='TRX',scan=false,show_btc_thb=false)
 
         
         
-        if !scan
+        if scan
+            scan_output.push(btc,coin.strip)
+            break
+        else
             output << "-------------------------------"
             output <<  "TIME #{Time.now}"
             output <<  "USD #{"%.2f" % (thai_baht / tt_rate).round(2)}" 
@@ -95,27 +98,17 @@ def satang(delay=5,thb=20000,fx=34.19,coin='TRX',scan=false,show_btc_thb=false)
             if show_btc_thb
                 output <<  "KUCOIN BTC WITHDRAWAL FEE #{"%.2f" % (btc_usd.round(2) * kucoin_withdraw_btc_fee.round(10)).round(2)}"
             end
-        end
-        if scan
-            #output <<  {"TOTAL BTC #{"%.5f" % btc.round(5)} (#{coin})"
-            scan_output.push(btc,coin.strip)
-        else
             output <<  "TOTAL BTC #{btc.round(10)} (#{coin})"
-        end
-        if !scan
-        output <<  "BTC-THB #{btc_thb}"
+            output <<  "BTC-THB #{btc_thb}"
             output <<  "TOTAL USD #{"%.2f" %  total_usd }"
             output <<  "TOTAL THB #{"%.2f" % (total_usd  * tt_rate).round(2)}"
             if show_btc_thb
                 output <<  "TOTAL BTC TO SATANG #{"%.9f" % btc_to_satang.round(10)}"
                 output <<  "TOTAL BTC_THB #{"%.9f" % final_thb_from_btc.round(10)}"
             end
+            puts output
+            sleep delay
         end
-
-        
-        puts output if !scan
-        break if scan
-        sleep delay
     end
     return scan_output if scan
     
